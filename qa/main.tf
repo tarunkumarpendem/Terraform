@@ -190,9 +190,9 @@ resource "null_resource" "qa_null" {
       /*"sudo -i",
       "git clone https://github.com/gothinkster/angular-realworld-example-app.git",
       "cd angular-realworld-example-app/",
-      "npm install -g @angular/cli@8",
+      "npm install -g @angular/cli",
       "npm install",
-      "ng serve"*/
+      "ng serve --host "0.0.0.0"*/
     ]
   }
 }

@@ -138,7 +138,7 @@ resource "aws_instance" "dev_ec2" {
 }
 
 # null resource 
-resource "null_resource" "dev_null" {
+resource "null_resource" "dev_null1" {
   triggers = {
     "trigger_number" = var.trigger_number
   }
@@ -152,15 +152,40 @@ resource "null_resource" "dev_null" {
     inline = [
       "sudo apt update",
       "curl -sL https://deb.nodesource.com/setup_16.x | sudo bash -",
-      "sudo apt -y install nodejs",
-      "sudo -i",
+      "sudo apt update",
+      "sudo apt install nodejs -y",
+      "sudo npm -v",
+      ]
+  }
+  depends_on = [
+    aws_instance.dev_ec2
+  ]
+}
+
+# null resource 
+resource "null_resource" "dev_null2" {
+  triggers = {
+    "trigger_number" = var.trigger_number
+  }
+  provisioner "remote-exec" {
+    connection {
+      type        = "ssh"
+      user        = "ubuntu"
+      host        = aws_instance.dev_ec2.public_ip
+      private_key = file("~/.ssh/id_rsa")
+    }
+    inline = [
       "git clone https://github.com/gothinkster/angular-realworld-example-app.git",
       "cd angular-realworld-example-app/",
-      "npm install -g @angular/cli",
-      "npm install",
-      "ng serve --host 0.0.0.0"
+      "sudo npm install -g @angular/cli",
+      "sudo npm install"
     ]
   }
+  depends_on = [
+    null_resource.dev_null1
+  ]
 }
+
+
 
 
