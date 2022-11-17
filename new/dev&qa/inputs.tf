@@ -21,6 +21,14 @@ variable "subnet_details" {
 variable "rt_details" {
     type = object({
         route_table_tags = list(string)
-    })
-  
+    }) 
+}
+
+variable "instance_details" {
+  type = object({
+    ami_id = string
+    key_pair = string
+    instance_type  = string
+    qa_instance_tags = list(string)
+  }) 
 }

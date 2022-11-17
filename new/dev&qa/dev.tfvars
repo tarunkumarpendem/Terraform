@@ -1,7 +1,7 @@
 region = "us-east-1"
 vpc_details = {
   cidr_block = "10.10.0.0/16"
-  vpc_tag = "for dev & qa"
+  vpc_tag = "for dev"
   destination_cidr = "0.0.0.0/0"
 }
 subnet_details = {
@@ -11,4 +11,9 @@ subnet_details = {
 }
 rt_details = {
   route_table_tags = [ "rt-1", "rt-2" ]
+}
+instance_details = {
+  ami_id = "ami-0149b2da6ceec4bb0"
+  instance_type = "t2.micro"
+  key_pair = "standard"
 }
