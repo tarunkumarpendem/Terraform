@@ -3,9 +3,12 @@ variable "region" {
   default = "us-east-1"
 }
 
-variable "vpc_cidr" {
-  type    = string
-  default = "192.168.0.0/16"
+variable "vpc_detatils" {
+  type    = object({
+    vpc_cidr  = list(string)
+    vpc_tags  = list(string)
+
+  })
 }
 
 variable "subnet_cidr" {
@@ -37,5 +40,9 @@ variable "ec2_details" {
 }
 
 variable "trigger_number" {
+  type = string
+}
+
+variable "vpc_env_count" {
   type = string
 }

@@ -165,37 +165,6 @@ resource "aws_instance" "qa_ec2" {
   ]
 }
 
-# data source
-#data "aws_instance" "dev_instance" {
-#       instance_id  = aws_instance.dev_ec2.id
-  
-#}
-# null resource 
-resource "null_resource" "qa_null" {
-  triggers = {
-    "trigger_number" = var.trigger_number
-  }
-  provisioner "remote-exec" {
-    connection {
-      type        = "ssh"
-      user        = "ubuntu"
-      host        = aws_instance.qa_ec2[0].private_ip
-      private_key = file("~/.ssh/id_rsa")
-      timeout = "4m"
-    }
-    inline = [
-      "sudo apt update",
-      "curl -sL https://deb.nodesource.com/setup_16.x | sudo bash -",
-      "sudo apt -y install nodejs"
-      /*"sudo -i",
-      "git clone https://github.com/gothinkster/angular-realworld-example-app.git",
-      "cd angular-realworld-example-app/",
-      "npm install -g @angular/cli",
-      "npm install",
-      "ng serve --host "0.0.0.0"*/
-    ]
-  }
-}
 
 
 # create TargetGroup

@@ -1,5 +1,5 @@
 # Vpc_Id
-output "vpc_id" {
+/*output "vpc_id" {
   value = aws_vpc.dev_vpc.id
 }
 
@@ -38,5 +38,5 @@ output "Instance_Id" {
 # Instance_url
 output "Instance_url" {
   value = format("http://%s", aws_instance.dev_ec2.public_ip)
-}
+}*/
 

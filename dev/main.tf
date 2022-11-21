@@ -2,16 +2,17 @@
 #--------------------------
 
 # Create VPC
-resource "aws_vpc" "dev_vpc" {
-  cidr_block = var.vpc_cidr
+resource "aws_vpc" "vpc" {
+  count = terraform_workspace == default ? var.vpc_env_count : var.vpc_env_count
+  cidr_block = terraform_workspace == default ? var.vpc_detatils.vpc_cidr[0]  : var.vpc_detatils.vpc_cidr[0] 
   tags = {
-    "Name" = "Dev_Vpc"
+    "Name" = terraform_workspace == default ? var.vpc_detatils.vpc_tags[0] : var.vpc_detatils.vpc_tags[0]
   }
 }
 
 
 # Create Subnets
-resource "aws_subnet" "dev_subnet" {
+/*esource "aws_subnet" "dev_subnet" {
   cidr_block        = var.subnet_cidr
   availability_zone = var.availability_zone
   vpc_id            = aws_vpc.dev_vpc.id
@@ -130,7 +131,7 @@ resource "aws_instance" "dev_ec2" {
   associate_public_ip_address = true
   security_groups             = [aws_security_group.dev_sg.id]
   tags = {
-    "Name" = "Dev_EC2_Instnace"
+    "Name" = "Dev"
   }
   depends_on = [
     aws_security_group.dev_sg
@@ -138,7 +139,7 @@ resource "aws_instance" "dev_ec2" {
 }
 
 # null resource 
-resource "null_resource" "dev_null1" {
+/*resource "null_resource" "dev_null" {
   triggers = {
     "trigger_number" = var.trigger_number
   }
@@ -150,20 +151,17 @@ resource "null_resource" "dev_null1" {
       private_key = file("~/.ssh/id_rsa")
     }
     inline = [
-      "sudo apt update",
-      "curl -sL https://deb.nodesource.com/setup_16.x | sudo bash -",
-      "sudo apt update",
-      "sudo apt install nodejs -y",
-      "sudo npm -v",
+      "sudo -i",
+      "cd angular-realworld-example-app/"
       ]
   }
   depends_on = [
     aws_instance.dev_ec2
   ]
-}
+}*/
 
 # null resource 
-resource "null_resource" "dev_null2" {
+/*resource "null_resource" "dev_null1" {
   triggers = {
     "trigger_number" = var.trigger_number
   }
@@ -175,17 +173,11 @@ resource "null_resource" "dev_null2" {
       private_key = file("~/.ssh/id_rsa")
     }
     inline = [
-      "git clone https://github.com/gothinkster/angular-realworld-example-app.git",
-      "cd angular-realworld-example-app/",
-      "sudo npm install -g @angular/cli",
-      "sudo npm install"
-    ]
+      "ng serve --host 0.0.0.0"
+      ]
   }
   depends_on = [
-    null_resource.dev_null1
+    null_resource.dev_null
   ]
-}
-
-
-
+}*/
 
