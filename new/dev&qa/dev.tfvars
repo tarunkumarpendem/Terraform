@@ -13,7 +13,7 @@ rt_details = {
   route_table_tags = [ "rt-1", "rt-2" ]
 }
 instance_details = {
-  ami_id = "ami-0149b2da6ceec4bb0"
+  ami_id = "ami-0169e00b74f2bb482"
   instance_type = "t2.micro"
   key_pair = "standard"
 }
