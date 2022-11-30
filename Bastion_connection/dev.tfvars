@@ -17,5 +17,5 @@ instance_details = {
   instance_tags = [ "public-ip", "private-ip" ]
   instance_type = "t2.micro"
   key_pair = "standard"
-  null_trigger = "1.0"
+  null_trigger = "1.1"
 }

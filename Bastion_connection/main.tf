@@ -134,10 +134,10 @@ resource "null_resource" "null" {
   provisioner "remote-exec" {
     connection {
       type                = "ssh"
-      host                = aws_instance.public_instance.public_ip
+      host                = aws_instance.private_instance.private_ip
       user                = "ubuntu"
       private_key         = file("~/.ssh/id_rsa")
-      bastion_host        = aws_instance.private_instance.private_ip
+      bastion_host        = aws_instance.public_instance.public_ip
       bastion_host_key    = file("~/.ssh/id_rsa.pub")
       bastion_user        = "ubuntu"
       bastion_private_key = file("~/.ssh/id_rsa")
