@@ -12,6 +12,8 @@ variable "network_details" {
         subnet_tags = list(string)
         internet_gateway_tag = string
         security_group_tag = string
+        elastic_ip_tag = string
+        nat_gateway_tag = string
     }) 
 }
 
@@ -29,6 +31,14 @@ variable "instance_details" {
         instance_type = string
         instance_tags = list(string)
         null_trigger  = string
+    }) 
+}
+
+variable "load_balancer_details" {
+    type = object({
+        target_group_tag = string
+        load_balancer_tag = string
+        load_balancer_type = string
     })
   
 }
