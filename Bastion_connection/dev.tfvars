@@ -19,10 +19,17 @@ instance_details = {
   instance_tags = [ "public-ip", "private-ip" ]
   instance_type = "t2.micro"
   key_pair = "standard"
-  null_trigger = "1.2"
+  null_trigger = "1.0"
 }
 load_balancer_details = {
   load_balancer_tag = "app-load-balancer"
   load_balancer_type = "application"
   target_group_tag = "tg"
+  port = 80
+  protocol = "HTTP"
+  listener_tag = "listner-1"
+  target_group_name = "TargetGroup"
+  target_type = "instance"
+  load_balancer_name = "ApplicationLoadBalancer"
+  load_balancer_listner_type = "forward"
 }

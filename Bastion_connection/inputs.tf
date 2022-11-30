@@ -36,9 +36,16 @@ variable "instance_details" {
 
 variable "load_balancer_details" {
     type = object({
+        target_group_name = string
         target_group_tag = string
+        target_type = string
+        load_balancer_name = string
         load_balancer_tag = string
         load_balancer_type = string
+        port = string
+        protocol = string
+        listener_tag = string
+        load_balancer_listner_type = string
     })
   
 }

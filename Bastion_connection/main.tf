@@ -28,12 +28,12 @@ resource "aws_internet_gateway" "igw" {
 resource "aws_eip" "elastic_ip" {
   tags = {
     "Name" = var.network_details.elastic_ip_tag
-  } 
+  }
 }
 
 resource "aws_nat_gateway" "nat_gateway" {
   allocation_id = aws_eip.elastic_ip.allocation_id
-  subnet_id = aws_subnet.bastion_subnets[0].id
+  subnet_id     = aws_subnet.bastion_subnets[0].id
   tags = {
     "Name" = var.network_details.nat_gateway_tag
   }
@@ -61,11 +61,11 @@ resource "aws_route" "igw_route" {
 
 resource "aws_route" "nat_route" {
   route_table_id         = aws_route_table.bastion_route_tables[1].id
-  nat_gateway_id = aws_nat_gateway.nat_gateway.id
+  nat_gateway_id         = aws_nat_gateway.nat_gateway.id
   destination_cidr_block = var.route_table_details.destination_cidr
   depends_on = [
     aws_route_table.bastion_route_tables
-  ] 
+  ]
 }
 
 resource "aws_route_table_association" "subnet_association_1" {
@@ -170,33 +170,36 @@ resource "null_resource" "null" {
       "sudo apt install nginx -y"
     ]
   }
+  depends_on = [
+    aws_nat_gateway.nat_gateway
+  ]
 }
 
 # create target group
 resource "aws_lb_target_group" "tg" {
-  name        = "TargetGroup"
-  port        = "80"
-  protocol    = "HTTP"
+  name        = var.load_balancer_details.target_group_name
+  port        = var.load_balancer_details.port
+  protocol    = var.load_balancer_details.protocol
   vpc_id      = aws_vpc.bastion_vpc.id
-  target_type = "instance"
+  target_type = var.load_balancer_details.target_type
   health_check {
     enabled  = true
-    protocol = "HTTP"
-    port     = "80"
+    protocol = var.load_balancer_details.protocol
+    port     = var.load_balancer_details.port
     path     = "/"
   }
   tags = {
     "Name" = var.load_balancer_details.target_group_tag
   }
   depends_on = [
-    aws_vpc.bastion_vpc
+    aws_instance.private_instance
   ]
 }
 
 resource "aws_lb_target_group_attachment" "TG_Attach1" {
   target_group_arn = aws_lb_target_group.tg.arn
   target_id        = aws_instance.public_instance.id
-  port             = "80"
+  port             = var.load_balancer_details.port
   #availability_zone = var.availability_zone[0]
   depends_on = [
     aws_lb_target_group.tg
@@ -206,7 +209,7 @@ resource "aws_lb_target_group_attachment" "TG_Attach1" {
 resource "aws_lb_target_group_attachment" "TG_Attach2" {
   target_group_arn = aws_lb_target_group.tg.arn
   target_id        = aws_instance.private_instance.id
-  port             = "80"
+  port             = var.load_balancer_details.port
   #availability_zone = var.availability_zone[0]
   depends_on = [
     aws_lb_target_group.tg
@@ -214,7 +217,7 @@ resource "aws_lb_target_group_attachment" "TG_Attach2" {
 }
 
 resource "aws_lb" "app_lb" {
-  name               = "ApplicationLoadBalancer"
+  name               = var.load_balancer_details.load_balancer_name
   internal           = false
   load_balancer_type = var.load_balancer_details.load_balancer_type
   security_groups    = [aws_security_group.bastion_sg.id]
@@ -230,14 +233,14 @@ resource "aws_lb" "app_lb" {
 # create listener
 resource "aws_lb_listener" "alb_listener" {
   default_action {
-    type             = "forward"
+    type             = var.load_balancer_details.load_balancer_listner_type
     target_group_arn = aws_lb_target_group.tg.arn
   }
   load_balancer_arn = aws_lb.app_lb.arn
-  port              = "80"
-  protocol          = "HTTP"
+  port              = var.load_balancer_details.port
+  protocol          = var.load_balancer_details.protocol
   tags = {
-    "Name" = "Listener-1"
+    "Name" = var.load_balancer_details.listener_tag
   }
 }
 
