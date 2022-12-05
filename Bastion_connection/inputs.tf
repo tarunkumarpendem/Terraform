@@ -46,6 +46,5 @@ variable "load_balancer_details" {
         protocol = string
         listener_tag = string
         load_balancer_listner_type = string
-    })
-  
+    }) 
 }
