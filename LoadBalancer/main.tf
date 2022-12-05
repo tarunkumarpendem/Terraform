@@ -108,7 +108,7 @@ resource "aws_instance" "lb_instances" {
 
 resource "aws_lb_target_group" "lb_tg" {
   target_type = var.load_balancer_details.target_type
-  protocol    = "HTTP"
+  protocol    = var.null_resource_details.protocol
   port        = 80
   vpc_id      = aws_vpc.lb_vpc.id
   tags = {
@@ -118,7 +118,7 @@ resource "aws_lb_target_group" "lb_tg" {
     enabled  = true
     path     = "/"
     port     = 80
-    protocol = "HTTP"
+    protocol = var.null_resource_details.protocol
   }
 }
 
@@ -133,29 +133,29 @@ resource "aws_lb_target_group_attachment" "tg_attachment" {
 }
 
 resource "aws_lb" "alb_tf" {
-    load_balancer_type = var.load_balancer_details.load_balancer_type
-    internal = false
-    security_groups = [aws_security_group.lb_sg.id]
-    subnets = [ aws_subnet.lb_subnets[0].id, aws_subnet.lb_subnets[1].id ]
-    tags = {
-      "Name" = var.load_balancer_details.load_balancer_name
-    }
-    depends_on = [
-      aws_lb_target_group.lb_tg
-    ]
+  load_balancer_type = var.load_balancer_details.load_balancer_type
+  internal           = false
+  security_groups    = [aws_security_group.lb_sg.id]
+  subnets            = [aws_subnet.lb_subnets[0].id, aws_subnet.lb_subnets[1].id]
+  tags = {
+    "Name" = var.load_balancer_details.load_balancer_name
+  }
+  depends_on = [
+    aws_lb_target_group.lb_tg
+  ]
 }
 
 resource "aws_lb_listener" "alb_listener" {
-    default_action {
-      type = "forward"
-      target_group_arn = aws_lb_target_group.lb_tg.arn
-    }
-    load_balancer_arn = aws_lb.alb_tf.arn
-    port = 80
-    protocol = "HTTP"
-    tags = {
-      "Name" = "Listner-1"
-    }
+  default_action {
+    type             = var.null_resource_details.listener_type
+    target_group_arn = aws_lb_target_group.lb_tg.arn
+  }
+  load_balancer_arn = aws_lb.alb_tf.arn
+  port              = 80
+  protocol          = var.null_resource_details.protocol
+  tags = {
+    "Name" = var.null_resource_details.listener_name
+  }
 }
 
 

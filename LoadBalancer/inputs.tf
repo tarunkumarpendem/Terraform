@@ -27,11 +27,20 @@ variable "instances_details" {
 }
 
 variable "load_balancer_details" {
-    type = object({
-        target_group_name = string
-        target_type = string
-        load_balancer_type = string
-        load_balancer_name = string
-    })
-  
+  type = object({
+    target_group_name  = string
+    target_type        = string
+    load_balancer_type = string
+    load_balancer_name = string
+  })
+}
+
+variable "null_resource_details" {
+  type = object({
+    connection_type = string
+    user_name       = string
+    protocol        = string
+    listener_type   = string
+    listener_name   = string
+  })
 }
