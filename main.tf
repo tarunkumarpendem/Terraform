@@ -147,7 +147,7 @@ resource "null_resource" "null" {
       type        = "ssh"
       host        = aws_instance.public_instance.public_ip
       user        = "ubuntu"
-      private_key = file("~/.ssh/id_rsa")
+      private_key = file("~/id_rsa")
     }
     inline = [
       "sudo apt update",
@@ -159,11 +159,11 @@ resource "null_resource" "null" {
       type                = "ssh"
       host                = aws_instance.private_instance.private_ip
       user                = "ubuntu"
-      private_key         = file("~/.ssh/id_rsa")
+      private_key         = file("~/id_rsa")
       bastion_host        = aws_instance.public_instance.public_ip
-      bastion_host_key    = file("~/.ssh/id_rsa.pub")
+      bastion_host_key    = file("~/id_rsa.pub")
       bastion_user        = "ubuntu"
-      bastion_private_key = file("~/.ssh/id_rsa")
+      bastion_private_key = file("~/id_rsa")
     }
     inline = [
       "sudo apt update",
