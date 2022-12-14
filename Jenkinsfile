@@ -2,6 +2,9 @@ pipeline{
     agent{
         label 'node-2'
     }
+    triggers{
+        pollSCM('* * * * *')
+    }
     stages{
         stage('clone'){
             steps{
@@ -11,8 +14,7 @@ pipeline{
         }
         stage('terraform'){
             steps{
-                sh 'cd /terraform'
-                sh 'cd /lb-autoscaling-group'
+                //sh 'cd /lb-autoscaling-group'
                 sh 'ls && pwd'
                 //sh 'terraform init'
                 //sh 'terraform apply -var-file="dev.tfvars" -auto-approve'
