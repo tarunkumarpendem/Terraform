@@ -11,9 +11,10 @@ pipeline{
         }
         stage('terraform'){
             steps{
+                sh 'cd /lb-autoscaling-group'
                 sh 'ls && pwd'
-                sh 'terraform init'
-                sh 'terraform apply -var-file="dev.tfvars" -auto-approve'
+                //sh 'terraform init'
+                //sh 'terraform apply -var-file="dev.tfvars" -auto-approve'
                 //sh 'terraform destroy -var-file="dev.tfvars" -auto-approve'
             }
         }
