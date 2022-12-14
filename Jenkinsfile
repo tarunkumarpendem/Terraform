@@ -11,6 +11,7 @@ pipeline{
         }
         stage('terraform'){
             steps{
+                sh 'cd /terraform'
                 sh 'cd /lb-autoscaling-group'
                 sh 'ls && pwd'
                 //sh 'terraform init'
