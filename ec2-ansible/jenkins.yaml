@@ -1,0 +1,66 @@
+#######################
+### Install Jenkins ###
+#######################
+---
+- name: Running Jenkins as a service
+  hosts: all 
+  become: yes
+  tasks:
+    - name: Install Java 17
+      ansible.builtin.apt:
+        name: openjdk-17-jdk
+        state: present 
+        update_cache: yes
+    
+    - name: Ensure curl is installed
+      ansible.builtin.apt:
+        name: curl
+        state: present
+    
+    - name: Create Jenkins user
+      ansible.builtin.user:
+        name: jenkins
+        comment: Jenkins User
+        shell: /bin/bash
+        create_home: yes
+    
+    - name: Create directory for Jenkins
+      ansible.builtin.file:
+        path: /opt/jenkins
+        state: directory
+        mode: '0755'
+    
+    - name: Ensure /opt/jenkins is owned by Jenkins user
+      ansible.builtin.file:
+        path: /opt/jenkins
+        owner: jenkins
+        group: jenkins
+        recurse: yes
+        mode: '0755'
+    
+    - name: Downloading Jenkins war file 
+      ansible.builtin.get_url:
+        url: https://updates.jenkins.io/download/war/2.480/jenkins.war
+        dest: /opt/jenkins/jenkins.war
+    
+    - name: Adding service file for Jenkins
+      ansible.builtin.copy:
+        src: ./jenkins.ini
+        dest: /etc/systemd/system/jenkins.service
+      notify: Restarting Jenkins
+    
+    - name: Reload systemd
+      ansible.builtin.systemd:
+        daemon_reload: yes
+
+    - name: Starting Jenkins service
+      ansible.builtin.systemd:
+        name: jenkins
+        enabled: yes
+        state: started
+    
+  handlers:      
+    - name: Restarting Jenkins
+      ansible.builtin.systemd:
+        name: jenkins
+        state: restarted
